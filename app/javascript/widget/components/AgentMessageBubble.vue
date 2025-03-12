@@ -1,24 +1,25 @@
 <script>
 import { useMessageFormatter } from 'shared/composables/useMessageFormatter';
 import ChatCard from 'shared/components/ChatCard.vue';
-import ChatForm from 'shared/components/ChatForm.vue';
 import ChatOptions from 'shared/components/ChatOptions.vue';
 import ChatArticle from './template/Article.vue';
 import EmailInput from './template/EmailInput.vue';
 import CustomerSatisfaction from 'shared/components/CustomerSatisfaction.vue';
 import { useDarkMode } from 'widget/composables/useDarkMode';
 import IntegrationCard from './template/IntegrationCard.vue';
+import KiboOrderItemSelect from 'shared/components/KiboOrderItemSelect.vue';
 
 export default {
   name: 'AgentMessageBubble',
+
   components: {
     ChatArticle,
     ChatCard,
-    ChatForm,
     ChatOptions,
     EmailInput,
     CustomerSatisfaction,
     IntegrationCard,
+    KiboOrderItemSelect,
   },
   props: {
     message: { type: String, default: null },
@@ -34,12 +35,18 @@ export default {
     const { formatMessage, getPlainText, truncateMessage, highlightContent } =
       useMessageFormatter();
     const { getThemeClass } = useDarkMode();
+
+    const kiboSelectItems = this.isForm
+      ? JSON.parse(this.message).toolCall.inputParameters
+      : [];
+
     return {
       formatMessage,
       getPlainText,
       truncateMessage,
       highlightContent,
       getThemeClass,
+      kiboSelectItems,
     };
   },
   computed: {
@@ -125,9 +132,11 @@ export default {
         @option-select="onOptionSelect"
       />
     </div>
-    <ChatForm
+
+    <KiboOrderItemSelect
       v-if="isForm && !messageContentAttributes.submitted_values"
       :items="messageContentAttributes.items"
+      :order-items="kiboSelectItems"
       :button-label="messageContentAttributes.button_label"
       :submitted-values="messageContentAttributes.submitted_values"
       @submit="onFormSubmit"

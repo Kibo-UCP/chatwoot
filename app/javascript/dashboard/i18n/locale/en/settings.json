@@ -253,7 +253,13 @@
       "SEE_ON_MAP": "See on map"
     },
     "FORM_BUBBLE": {
-      "SUBMIT": "Submit"
+      "ORDER_ITEMS": "Order Items",
+      "SUBMIT": "Submit",
+      "CLEAR_SELECTION": "Clear selection",
+      "SELECTED_ITEM_COUNT": "{count} item(s) selected",
+      "NO_ITEMS_AVAILABLE": "No items available",
+      "QUANTITY": "Quantity:",
+      "ORDER_NO": "Order #"
     },
     "MEDIA": {
       "IMAGE_UNAVAILABLE": "This image is no longer available.",
