@@ -24,9 +24,15 @@ export default {
       default: () => [],
     },
   },
+  emits: ['cardClick'],
   setup() {
     const { getThemeClass } = useDarkMode();
     return { getThemeClass };
+  },
+  methods: {
+    onClick() {
+      this.$emit('cardClick', this.$props);
+    },
   },
 };
 </script>
@@ -35,6 +41,7 @@ export default {
   <div
     class="card-message chat-bubble agent"
     :class="getThemeClass('bg-white', 'dark:bg-slate-700')"
+    @click="onClick"
   >
     <img class="media" :src="mediaUrl" />
     <div class="card-body">
@@ -60,7 +67,7 @@ export default {
 @import 'dashboard/assets/scss/mixins.scss';
 
 .card-message {
-  max-width: 220px;
+  min-width: 200px;
   padding: $space-small;
   border-radius: $space-small;
   overflow: hidden;

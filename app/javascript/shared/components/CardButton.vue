@@ -37,7 +37,7 @@ export default {
     :style="{
       background: widgetColor,
       borderColor: widgetColor,
-      color: textColor,
+      // color: textColor,
     }"
     target="_blank"
     rel="noopener nofollow noreferrer"

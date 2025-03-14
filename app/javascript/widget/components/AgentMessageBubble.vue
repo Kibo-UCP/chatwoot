@@ -7,7 +7,7 @@ import EmailInput from './template/EmailInput.vue';
 import CustomerSatisfaction from 'shared/components/CustomerSatisfaction.vue';
 import { useDarkMode } from 'widget/composables/useDarkMode';
 import IntegrationCard from './template/IntegrationCard.vue';
-import KiboOrderItemSelect from 'shared/components/KiboOrderItemSelect.vue';
+import KiboOrderItemSelect from 'shared/components/Kibo/KiboOrderItemSelect.vue';
 
 export default {
   name: 'AgentMessageBubble',
@@ -95,6 +95,9 @@ export default {
         messageId: this.messageId,
       });
     },
+    onCardClick(action) {
+      // TODO: Handle card click
+    },
   },
 };
 </script>
@@ -149,6 +152,7 @@ export default {
         :title="item.title"
         :description="item.description"
         :actions="item.actions"
+        @cardClick="onCardClick"
       />
     </div>
     <div v-if="isArticle">
