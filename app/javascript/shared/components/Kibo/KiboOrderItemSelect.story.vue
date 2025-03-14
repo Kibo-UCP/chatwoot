@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import OrderItemSelect from './KiboOrderItemSelect.vue';
+import OrderItemSelect from '../Kibo/KiboOrderItemSelect.vue';
 
 // Sample order items
 const orderItems = ref(
