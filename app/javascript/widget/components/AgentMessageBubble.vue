@@ -31,15 +31,15 @@ export default {
       default: () => {},
     },
   },
-  setup() {
+  setup(props) {
     const { formatMessage, getPlainText, truncateMessage, highlightContent } =
       useMessageFormatter();
     const { getThemeClass } = useDarkMode();
 
-    const kiboSelectItems = this.isForm
-      ? JSON.parse(this.message).toolCall.inputParameters
-      : [];
-
+    let kiboSelectItems = '';
+    if (props.contentType === 'form' && props.message?.includes('toolCall')) {
+      kiboSelectItems = props.message;
+    }
     return {
       formatMessage,
       getPlainText,
@@ -95,7 +95,7 @@ export default {
         messageId: this.messageId,
       });
     },
-    onCardClick(action) {
+    onCardClick() {
       // TODO: Handle card click
     },
   },
@@ -152,7 +152,7 @@ export default {
         :title="item.title"
         :description="item.description"
         :actions="item.actions"
-        @cardClick="onCardClick"
+        @card-click="onCardClick"
       />
     </div>
     <div v-if="isArticle">
