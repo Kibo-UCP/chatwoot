@@ -1,6 +1,7 @@
 <script>
 import { useMessageFormatter } from 'shared/composables/useMessageFormatter';
 import ChatCard from 'shared/components/ChatCard.vue';
+import ChatForm from 'shared/components/ChatForm.vue';
 import ChatOptions from 'shared/components/ChatOptions.vue';
 import ChatArticle from './template/Article.vue';
 import EmailInput from './template/EmailInput.vue';
@@ -14,6 +15,7 @@ export default {
 
   components: {
     ChatArticle,
+    ChatForm,
     ChatCard,
     ChatOptions,
     EmailInput,
@@ -73,6 +75,16 @@ export default {
     },
     isIntegrations() {
       return this.contentType === 'integrations';
+    },
+    isToolCall() {
+      return this.contentType === 'form' && this.message?.includes('toolCall');
+    },
+    isOrderItemSelect() {
+      // todo: determine if this is an order item select
+      return this.contentType === 'form' && this.message?.includes('toolCall');
+    },
+    isProductGrid() {
+      return this.contentType === 'form' && this.message?.includes('toolCall');
     },
   },
   methods: {
@@ -135,9 +147,19 @@ export default {
         @option-select="onOptionSelect"
       />
     </div>
-
+    <ChatForm
+      v-if="isForm && !isToolCall && !messageContentAttributes.submitted_values"
+      :items="messageContentAttributes.items"
+      :button-label="messageContentAttributes.button_label"
+      :submitted-values="messageContentAttributes.submitted_values"
+      @submit="onFormSubmit"
+    />
     <KiboOrderItemSelect
-      v-if="isForm && !messageContentAttributes.submitted_values"
+      v-if="
+        isToolCall &&
+        isOrderItemSelect &&
+        !messageContentAttributes.submitted_values
+      "
       :items="messageContentAttributes.items"
       :order-items="kiboSelectItems"
       :button-label="messageContentAttributes.button_label"
