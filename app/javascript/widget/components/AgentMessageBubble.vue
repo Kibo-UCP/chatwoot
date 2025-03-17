@@ -107,8 +107,16 @@ export default {
         messageId: this.messageId,
       });
     },
-    onCardClick() {
+    onCardClick(formValues) {
       // TODO: Handle card click
+      const formValuesAsArray = Object.keys(formValues).map(key => ({
+        name: key,
+        value: formValues[key],
+      }));
+      this.onResponse({
+        submittedValues: formValuesAsArray,
+        messageId: this.messageId,
+      });
     },
   },
 };
