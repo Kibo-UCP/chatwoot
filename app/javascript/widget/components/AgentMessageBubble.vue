@@ -188,7 +188,7 @@ export default {
         isToolCall &&
         isProductGrid &&
         !messageContentAttributes.submitted_values
-      ">
+      " class="horizontal-container">
       <ChatCard
         v-for="item in kiboProductCards"
         :key="item.title"
@@ -220,3 +220,13 @@ export default {
     />
   </div>
 </template>
+
+<style scoped lang="scss">
+.horizontal-container {
+  display: flex;
+  padding: 1rem;
+  gap: 20px;
+  overflow-x: auto;
+  max-width: 500px;
+}
+</style>
