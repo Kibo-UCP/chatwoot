@@ -42,6 +42,11 @@ export default {
     if (props.contentType === 'form' && props.message?.includes('toolCall')) {
       kiboSelectItems = props.message;
     }
+
+    let kiboProductCards = [];
+    if (props.contentType === 'form' && props.message?.includes('toolCall') && props.message?.includes('Render Product Grid')) {
+      kiboProductCards = JSON.parse(props.message)?.toolCall?.inputParameters?.items || [];
+    }
     return {
       formatMessage,
       getPlainText,
@@ -49,6 +54,7 @@ export default {
       highlightContent,
       getThemeClass,
       kiboSelectItems,
+      kiboProductCards
     };
   },
   computed: {
@@ -84,7 +90,7 @@ export default {
       return this.contentType === 'form' && this.message?.includes('toolCall');
     },
     isProductGrid() {
-      return this.contentType === 'form' && this.message?.includes('toolCall');
+      return this.message?.includes('Render Product Grid');
     },
   },
   methods: {
@@ -109,10 +115,14 @@ export default {
     },
     onCardClick(formValues) {
       // TODO: Handle card click
-      const formValuesAsArray = Object.keys(formValues).map(key => ({
-        name: key,
-        value: formValues[key],
-      }));
+      const formValuesAsArray = this.messageContentAttributes.items.map(item => {
+        return {
+          name: item.name,
+          label: item.label,
+          type: item.type,
+          options: item.options.filter(option => option.value === formValues.productCode)
+        }
+      })
       this.onResponse({
         submittedValues: formValuesAsArray,
         messageId: this.messageId,
@@ -174,6 +184,21 @@ export default {
       :submitted-values="messageContentAttributes.submitted_values"
       @submit="onFormSubmit"
     />
+    <div v-if="
+        isToolCall &&
+        isProductGrid &&
+        !messageContentAttributes.submitted_values
+      ">
+      <ChatCard
+        v-for="item in kiboProductCards"
+        :key="item.title"
+        :media-url="item.media_url"
+        :title="item.title"
+        :description="item.description"
+        :actions="item.actions"
+        @card-click="onCardClick"
+      />
+    </div>
     <div v-if="isCards">
       <ChatCard
         v-for="item in messageContentAttributes.items"
