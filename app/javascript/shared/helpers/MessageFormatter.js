@@ -47,8 +47,9 @@ const createMarkdownInstance = (linkify = true) => {
     .use(mila, {
       attrs: {
         class: 'link',
-        rel: 'noreferrer noopener nofollow',
-        target: '_blank',
+        // rel: 'noreferrer noopener nofollow',
+        onclick:"event.preventDefault();if(window.handleMDLinkClick)window.handleMDLinkClick(event);",
+        // target: '_blank',
       },
     });
 };

@@ -19,6 +19,10 @@ export default {
       type: String,
       default: '',
     },
+    productcode: {
+      type: String,
+      default: '',
+    },
     actions: {
       type: Array,
       default: () => [],

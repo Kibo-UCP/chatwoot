@@ -231,6 +231,18 @@ export default {
     },
     registerListeners() {
       const { websiteToken } = window.chatwootWebChannel;
+      window.handleMDLinkClick = (event) => {
+        event.preventDefault();
+        if (event.target.tagName === 'A') {
+          const link = event.target.attributes['href']?.value
+          const { href } = event.target;
+          IFrameHelper.sendMessage({
+            event: 'onEvent',
+            eventIdentifier: 'chatwoot:navigate-to',
+            data: { link: link || href },
+          });
+        }
+      }
       window.addEventListener('message', e => {
         if (!IFrameHelper.isAValidEvent(e)) {
           return;

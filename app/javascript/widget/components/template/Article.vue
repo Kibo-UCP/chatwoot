@@ -2,6 +2,7 @@
 import { useMessageFormatter } from 'shared/composables/useMessageFormatter';
 import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import { useDarkMode } from 'widget/composables/useDarkMode';
+import { IFrameHelper } from '../../helpers/utils';
 
 export default {
   components: {
@@ -18,6 +19,15 @@ export default {
     const { getThemeClass } = useDarkMode();
     return { getThemeClass, truncateMessage };
   },
+  methods: {
+    onClick(link) {
+      IFrameHelper.sendMessage({
+        event: 'onEvent',
+        eventIdentifier: 'chatwoot:navigate-to',
+        data: { link },
+      });
+    },
+  },
 };
 </script>
 
@@ -29,7 +39,7 @@ export default {
     :class="getThemeClass('bg-white', 'dark:bg-slate-700')"
   >
     <div v-for="item in items" :key="item.link" class="article-item">
-      <a :href="item.link" target="_blank" rel="noopener noreferrer nofollow">
+      <a rel="noopener noreferrer nofollow" @click="onClick(item.link)">
         <span class="title flex items-center text-black-900 font-medium">
           <FluentIcon
             icon="link"
@@ -62,6 +72,7 @@ export default {
   a {
     color: $color-body;
     text-decoration: none;
+    cursor: pointer;
   }
 
   .description {

@@ -44,8 +44,13 @@ export default {
     }
 
     let kiboProductCards = [];
-    if (props.contentType === 'form' && props.message?.includes('toolCall') && props.message?.includes('Render Product Grid')) {
-      kiboProductCards = JSON.parse(props.message)?.toolCall?.inputParameters?.items || [];
+    if (
+      props.contentType === 'form' &&
+      props.message?.includes('toolCall') &&
+      props.message?.includes('Render Product Grid')
+    ) {
+      kiboProductCards =
+        JSON.parse(props.message)?.toolCall?.inputParameters?.items || [];
     }
     return {
       formatMessage,
@@ -54,7 +59,7 @@ export default {
       highlightContent,
       getThemeClass,
       kiboSelectItems,
-      kiboProductCards
+      kiboProductCards,
     };
   },
   computed: {
@@ -87,7 +92,11 @@ export default {
     },
     isOrderItemSelect() {
       // todo: determine if this is an order item select
-      return this.contentType === 'form' && this.message?.includes('toolCall');
+      return (
+        this.contentType === 'form' &&
+        this.message?.includes('Render') &&
+        this.message?.includes('Item Selection')
+      );
     },
     isProductGrid() {
       return this.message?.includes('Render Product Grid');
@@ -115,14 +124,14 @@ export default {
     },
     onCardClick(formValues) {
       // TODO: Handle card click
-      const formValuesAsArray = this.messageContentAttributes.items.map(item => {
-        return {
-          name: item.name,
-          label: item.label,
-          type: item.type,
-          options: item.options.filter(option => option.value === formValues.productCode)
+      const formValuesAsArray = this.messageContentAttributes.items.map(
+        item => {
+          return {
+            name: item.name,
+            value: formValues.productcode,
+          };
         }
-      })
+      );
       this.onResponse({
         submittedValues: formValuesAsArray,
         messageId: this.messageId,
@@ -142,7 +151,7 @@ export default {
       :class="getThemeClass('bg-white', 'dark:bg-slate-700 has-dark-mode')"
     >
       <div
-        v-dompurify-html="formatMessage(message, false)"
+        v-html="formatMessage(message, false)"
         class="message-content text-slate-900 dark:text-slate-50"
       />
       <EmailInput
@@ -184,11 +193,14 @@ export default {
       :submitted-values="messageContentAttributes.submitted_values"
       @submit="onFormSubmit"
     />
-    <div v-if="
+    <div
+      v-if="
         isToolCall &&
         isProductGrid &&
         !messageContentAttributes.submitted_values
-      " class="horizontal-container">
+      "
+      class="horizontal-container"
+    >
       <ChatCard
         v-for="item in kiboProductCards"
         :key="item.title"
@@ -196,6 +208,7 @@ export default {
         :title="item.title"
         :description="item.description"
         :actions="item.actions"
+        :productcode="item.productcode"
         @card-click="onCardClick"
       />
     </div>
@@ -207,6 +220,7 @@ export default {
         :title="item.title"
         :description="item.description"
         :actions="item.actions"
+        :productcode="item.productcode"
         @card-click="onCardClick"
       />
     </div>

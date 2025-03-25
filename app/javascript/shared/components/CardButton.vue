@@ -1,6 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { getContrastingTextColor } from '@chatwoot/utils';
+import { IFrameHelper } from 'widget/helpers/utils';
 export default {
   components: {},
   props: {
@@ -23,6 +24,13 @@ export default {
   methods: {
     onClick() {
       // Do postback here
+      if (this.action.uri) {
+        IFrameHelper.sendMessage({
+          event: 'onEvent',
+          eventIdentifier: 'chatwoot:navigate-to',
+          data: { link: this.action.uri },
+        });
+      }
     },
   },
 };
@@ -33,14 +41,13 @@ export default {
     v-if="isLink"
     :key="action.uri"
     class="action-button button"
-    :href="action.uri"
     :style="{
       background: widgetColor,
       borderColor: widgetColor,
       // color: textColor,
     }"
-    target="_blank"
     rel="noopener nofollow noreferrer"
+    @click="onClick"
   >
     {{ action.text }}
   </a>
